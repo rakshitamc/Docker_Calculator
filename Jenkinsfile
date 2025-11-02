@@ -9,7 +9,7 @@ pipeline {
         stage('Load .env Variables') {
             steps {
                 script {
-                    def envFile = readFile('parameter.env').split('\n')
+                    def envFile = readFile('parameters.env').split('\n')
                     envFile.each {
                         if (it.trim() && !it.startsWith('#')) {
                             def pair = it.split('=')
