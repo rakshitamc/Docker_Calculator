@@ -9,13 +9,20 @@ pipeline {
         stage('Load .env Variables') {
             steps {
                 script {
+                    // Read and prepare environment variables for Docker
                     def envFile = readFile('parameters.env').split('\n')
-                    envFile.each {
-                        if (it.trim() && !it.startsWith('#')) {
-                            def pair = it.split('=')
-                            env[pair[0]] = pair[1].replaceAll('"', '')
+                    def dockerEnvArgs = ''
+                    envFile.each { line ->
+                        if (line.trim() && !line.startsWith('#')) {
+                            def (key, value) = line.tokenize('=')
+                            value = value.trim().replaceAll('"', '')
+                            dockerEnvArgs += "-e ${key}=${value} "
                         }
                     }
+
+                    // Save env args to workspace for later use
+                    writeFile file: 'docker_env_args.txt', text: dockerEnvArgs
+                    echo "✅ Loaded environment variables: ${dockerEnvArgs}"
                 }
             }
         }
@@ -23,7 +30,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${DOCKER_IMAGE} .'
+                    sh "docker build -t ${DOCKER_IMAGE} ."
                 }
             }
         }
@@ -31,13 +38,8 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh '''
-                    docker run --rm \
-                    -e NUM1=$NUM1 \
-                    -e NUM2=$NUM2 \
-                    -e OPERATION=$OPERATION \
-                    ${DOCKER_IMAGE}
-                    '''
+                    def dockerEnvArgs = readFile('docker_env_args.txt').trim()
+                    sh "docker run --rm ${dockerEnvArgs} ${DOCKER_IMAGE}"
                 }
             }
         }
