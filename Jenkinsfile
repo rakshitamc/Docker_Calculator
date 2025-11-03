@@ -2,10 +2,6 @@ def dockerImage
 pipeline {
     agent any
 
-    environment {
-        // Manually define a Linux-style workspace path for Docker
-        WORKSPACE_LINUX = '/workspace'
-    }
 
     parameters {
         string(name: 'NUM1', defaultValue: '10', description: 'Enter first number')
@@ -29,7 +25,7 @@ pipeline {
                     echo "▶️ Running calculator inside Docker container using plugin..."
 
                     // Use plugin method to run inside the container
-                    dockerImage.inside("-v ${env.WORKSPACE}:/workspace -w /workspace -e NUM1=${params.NUM1} -e NUM2=${params.NUM2} -e OPERATION=${params.OPERATION}") {
+                    dockerImage.inside(" -e NUM1=${params.NUM1} -e NUM2=${params.NUM2} -e OPERATION=${params.OPERATION}") {
                         sh "python calculator.py"
                     }
                 }
