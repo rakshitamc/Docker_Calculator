@@ -24,10 +24,13 @@ pipeline {
                 script {
                     echo "Running calculator inside Docker container using plugin..."
 
-                    // Use plugin method to run inside the container
-                    dockerImage.inside("-e NUM1=${params.NUM1} -e NUM2=${params.NUM2} -e OPERATION=${params.OPERATION}") {
-                        sh "python calculator.py"
-                    }
+                    bat """
+                        docker run --rm ^
+                        -e NUM1=${params.NUM1} ^
+                        -e NUM2=${params.NUM2} ^
+                        -e OPERATION=${params.OPERATION} ^
+                        calculator-env-demo
+                    """
                 }
             }
         }
