@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     // Build image with Docker plugin
-                    dockerImage = docker.build("calculator-env-demo", 
+                    def dockerImage = docker.build("calculator-env-demo", 
                         "--build-arg NUM1=${params.NUM1} --build-arg NUM2=${params.NUM2} --build-arg OPERATION=${params.OPERATION} ."
                     )
                 }
@@ -20,10 +20,17 @@ pipeline {
         }
 
         stage('Run Docker Container') {
-            steps {
+           steps {
                 script {
-                    dockerImage.inside {
-                        sh 'python calculator.py'
+                    // ✅ Use Linux-style working directory & mount
+                    docker.image('calculator-env-demo').inside('-v /workspace:/app -w /app') {
+                        withEnv([
+                            "NUM1=${params.NUM1}",
+                            "NUM2=${params.NUM2}",
+                            "OPERATOR=${params.OPERATOR}"
+                        ]) {
+                            sh 'python calculator.py'
+                        }
                     }
                 }
             }
