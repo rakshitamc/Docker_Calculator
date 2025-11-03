@@ -1,29 +1,21 @@
 import os
 
-def calculate(num1, num2, operator):
-    num1 = float(num1)
-    num2 = float(num2)
+num1 = float(os.getenv("NUM1"))
+num2 = float(os.getenv("NUM2"))
+operation = os.getenv("OPERATION")
 
-    if operator == '+':
-        return num1 + num2
-    elif operator == '-':
-        return num1 - num2
-    elif operator == '*':
-        return num1 * num2
-    elif operator == '/':
-        return num1 / num2 if num2 != 0 else "Error: Division by zero"
+if operation == "+":
+    result = num1 + num2
+elif operation == "-":
+    result = num1 - num2
+elif operation == "*":
+    result = num1 * num2
+elif operation == "/":
+    if num2 != 0:
+        result = num1 / num2
     else:
-        return "Invalid operator"
+        result = "Division by zero error"
+else:
+    result = "Invalid operator"
 
-if __name__ == "__main__":
-    # Fetch values from environment variables
-    num1 = os.getenv('NUM1')
-    num2 = os.getenv('NUM2')
-    operator = os.getenv('OPERATION')
-
-    # Check if all environment variables are set
-    if not all([num1, num2, operator]):
-        print("Error: Missing environment variables NUM1, NUM2, or OPERATION")
-    else:
-        result = calculate(num1, num2, operator)
-        print(f"Result: {result}")
+print(f"Result: {result}")
