@@ -25,7 +25,7 @@ pipeline {
                     docker run --rm ^
                         -e NUM1=${params.NUM1} ^
                         -e NUM2=${params.NUM2} ^
-                        -e OPERATION=${params.OPERATOR} ^
+                        -e OPERATION=${params.OPERATION} ^
                         calculator-env-demo
                     """
                 }
