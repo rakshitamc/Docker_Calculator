@@ -12,7 +12,7 @@ pipeline {
             steps {
                 script {
                     echo "Building Docker image..."
-                    def dockerImage = docker.build("calculator-env-demo")
+                    dockerImage = docker.build("calculator-env-demo")
                 }
             }
         }
