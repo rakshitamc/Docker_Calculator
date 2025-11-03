@@ -24,7 +24,7 @@ pipeline {
 
                     // Use plugin method to run inside the container
                     docker.image("calculator-env-demo").inside("-e NUM1=${params.NUM1} -e NUM2=${params.NUM2} -e OPERATION=${params.OPERATION}") {
-                        bat "python calculator.py"
+                        sh "python calculator.py"
                     }
                 }
             }
