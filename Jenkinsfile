@@ -2,6 +2,11 @@ def dockerImage
 pipeline {
     agent any
 
+    environment {
+        // Manually define a Linux-style workspace path for Docker
+        WORKSPACE_LINUX = '/workspace'
+    }
+
     parameters {
         string(name: 'NUM1', defaultValue: '10', description: 'Enter first number')
         string(name: 'NUM2', defaultValue: '5', description: 'Enter second number')
