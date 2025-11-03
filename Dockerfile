@@ -3,4 +3,12 @@ FROM python:3.9-slim
 WORKDIR /app
 COPY . .
 
+ARG NUM1
+ARG NUM2
+ARG OPERATION
+
+ENV NUM1=${NUM1}
+ENV NUM2=${NUM2}
+ENV OPERATION=${OPERATION}
+
 CMD ["python", "calculator.py"]
